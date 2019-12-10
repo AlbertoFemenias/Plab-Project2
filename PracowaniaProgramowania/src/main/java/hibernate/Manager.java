@@ -1,11 +1,24 @@
 package hibernate;
 
-import hibernate.model.Employee;
+import hibernate.model.*;
 import hibernate.queries.Queries;
 
 import javax.persistence.*;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Random;
+
+/* RELATIONS
+Brand
+Model   - one to many with Brand
+Car     - one to many with Model
+Driver  - one to one  with Car and Driver
+License -
+ */
+
+
+
 
 
 class Manager {
@@ -27,6 +40,53 @@ class Manager {
 
             entityManager.getTransaction().begin();
 
+            Manufacturer brand1 = new Manufacturer();
+            brand1.setName("BMW");
+            brand1.setCountry("Germany");
+            brand1.setYear(1914);
+            entityManager.persist(brand1);
+
+            Model model1 = new Model();
+            model1.setName("328i");
+            model1.setHp(198);
+            model1.setType("coupe");
+            model1.setWeight(1400);
+            model1.setManufacturer(brand1);
+            entityManager.persist(model1);
+
+            brand1.addModel(model1);
+
+            Car car1 = new Car();
+            car1.setYear(2002);
+            car1.setModel(model1);
+            entityManager.persist(car1);;
+
+            Driver driver1 = new Driver();
+            driver1.setName("Pepe");
+            driver1.setBirth(ZonedDateTime.of(1985,10,25,0,0,0,0, ZoneId.of("UTC")));
+            driver1.setCar(car1);
+            entityManager.persist(driver1);
+
+            License license1 = new License();
+            license1.setNumber(35623440);
+            license1.setExpedition(2012);
+            license1.setType("truck-B");
+            entityManager.persist(license1);
+
+            driver1.setLicense(license1);
+
+
+            List<Model> models = new Queries(entityManager).getModelByName("328i");
+            Model model2 = new Model();
+            model2.setManufacturer(models.get(0).getManufacturer());
+            model2.setWeight(models.get(0).getWeight());
+            model2.setType(models.get(0).getType());
+            model2.setName("M3-CSL");
+            model2.setHp(360);
+            entityManager.persist(model2);
+
+
+/*
             Employee emp = new Employee();
             emp.setFirstName("Jan");
             emp.setLastName("Polak" + new Random().nextInt());
@@ -44,8 +104,9 @@ class Manager {
 
             System.out.println("Employee " + employee.getId() + " " + employee.getFirstName() + employee.getLastName());
 
-            changeFirstGuyToNowak(entityManager);
-
+            //entityManager.remove(emp);
+            //changeFirstGuyToNowak(entityManager);
+*/
             entityManager.getTransaction().commit();
 
             System.out.println("Done");
@@ -68,5 +129,6 @@ class Manager {
         employees.get(0).setLastName("NowakPRE" + new Random().nextInt());
 
     }
+
 
 }
