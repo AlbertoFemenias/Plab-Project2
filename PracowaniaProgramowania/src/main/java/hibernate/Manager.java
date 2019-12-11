@@ -1,11 +1,14 @@
 package hibernate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hibernate.model.*;
 import hibernate.queries.Queries;
 
 import javax.persistence.*;
+import java.io.File;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -46,6 +49,24 @@ class Manager {
             brand1.setYear(1914);
             entityManager.persist(brand1);
 
+            Manufacturer brand2 = new Manufacturer();
+            brand2.setName("Peugeot");
+            brand2.setCountry("France");
+            brand2.setYear(1905);
+            entityManager.persist(brand2);
+
+
+
+            /*ObjectMapper objectMapper = new ObjectMapper();
+            Manufacturer brand1 = objectMapper.readValue(new File("brand1.json"), Manufacturer.class);
+            System.out.println(brand1.getName());
+            brand1.setName("Audi");
+            //brand2.setYear(1920);
+            entityManager.merge(brand1);*/
+
+
+
+
             Model model1 = new Model();
             model1.setName("328i");
             model1.setHp(198);
@@ -63,7 +84,7 @@ class Manager {
 
             Driver driver1 = new Driver();
             driver1.setName("Pepe");
-            driver1.setBirth(ZonedDateTime.of(1985,10,25,0,0,0,0, ZoneId.of("UTC")));
+            //driver1.setBirth(ZonedDateTime.of(1985,10,25,0,0,0,0, ZoneId.of("UTC")));
             driver1.setCar(car1);
             entityManager.persist(driver1);
 
@@ -107,6 +128,15 @@ class Manager {
             //entityManager.remove(emp);
             //changeFirstGuyToNowak(entityManager);
 */
+
+            List <Manufacturer> manufacturerList = new ArrayList<Manufacturer>();
+            manufacturerList.add(brand1);
+            manufacturerList.add(brand2);
+
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writeValue(new File("manufacturer.json"), manufacturerList);
+
             entityManager.getTransaction().commit();
 
             System.out.println("Done");

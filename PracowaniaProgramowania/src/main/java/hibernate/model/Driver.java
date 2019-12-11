@@ -1,5 +1,9 @@
 package hibernate.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 
@@ -17,7 +21,9 @@ public class Driver {
     private String name;
 
     @Column(name = "birth")
-    private ZonedDateTime birth;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
+    private DateTime birth;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="CAR_id", referencedColumnName = "id")
@@ -46,10 +52,10 @@ public class Driver {
         return name;
     }
 
-    public void setBirth(ZonedDateTime birth) {
+    public void setBirth(DateTime birth) {
         this.birth = birth;
     }
-    public ZonedDateTime getBirth() {
+    public DateTime getBirth() {
         return birth;
     }
 
