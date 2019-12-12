@@ -1,39 +1,28 @@
-package unputonombre;
+package JSON;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import hibernate.model.*;
-import hibernate.queries.Queries;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.io.File;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class JsonLoadTest {
 
     @Test
     public void Main() {
-        System.out.println(1234567);
-
-
         System.out.println("Start");
-
         EntityManager entityManager = null;
-
         EntityManagerFactory entityManagerFactory = null;
 
         try {
 
             // FACTORY NAME HAS TO MATCHED THE ONE FROM PERSISTED.XML !!!
             entityManagerFactory = Persistence.createEntityManagerFactory("hibernate-dynamic");
-
             entityManager = entityManagerFactory.createEntityManager();
 
             entityManager.getTransaction().begin();
@@ -48,11 +37,9 @@ public class JsonLoadTest {
             //entityManager.merge(manArray[0]);
             for(int i = 0; i < manArray.length; i++)  entityManager.merge(manArray[i]);
 
-
             //Model
             Model[] modelArray = objectMapper.readValue(new File("models.json"), Model[].class);
             for(Model m:modelArray)  entityManager.merge(m);
-
 
             //Car
             Car[] carArray = objectMapper.readValue(new File("cars.json"), Car[].class);
@@ -67,11 +54,8 @@ public class JsonLoadTest {
             for(Driver d:driverArray)  entityManager.merge(d);
 
 
-
             entityManager.getTransaction().commit();
-
             System.out.println("Done");
-
             entityManager.close();
 
         } catch (Throwable ex) {

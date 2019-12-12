@@ -3,6 +3,7 @@ package hibernate.queries;
 import hibernate.model.*;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -14,17 +15,32 @@ public class Queries {
         this.entityManager = entityManager;
     }
 
-    public List<Employee> getEmployeeByName(String name) {
-        TypedQuery<Employee> query = entityManager.createQuery(
-                "SELECT c FROM Employee c WHERE c.lastName LIKE :name", Employee.class);
-        return query.setParameter("name", "%" + name + "%").getResultList();
+   
+    public List<String> getModelsOfManufacturer(int id) {
+        TypedQuery<String> query = entityManager.createQuery(
+                "SELECT name FROM Model where manufacturer_id LIKE :id", String.class);
+        return query.setParameter("id", id ).getResultList();
     }
+
 
     public List<Model> getModelByName(String name) {
         TypedQuery<Model> query = entityManager.createQuery(
                 "SELECT c FROM Model c WHERE c.name LIKE :name", Model.class);
         return query.setParameter("name", "%" + name + "%").getResultList();
     }
+
+    public List<Manufacturer> getManPag() {
+        Query query = entityManager.createQuery("SELECT m FROM Manufacturer m");
+        int pageNumber = 1;
+        int pageSize = 10;
+        query.setFirstResult((pageNumber-1) * pageSize);
+        query.setMaxResults(pageSize);
+        List <Manufacturer> manList = query.getResultList();
+        return manList;
+    }
+
+
+
 
     public List<Manufacturer> getAllManufacturer() {
         TypedQuery<Manufacturer> query = entityManager.createQuery(

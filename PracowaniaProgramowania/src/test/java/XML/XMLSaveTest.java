@@ -1,40 +1,35 @@
-package unputonombre;
+package XML;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import hibernate.model.*;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import hibernate.model.*;
-import hibernate.queries.Queries;
-
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.io.File;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class JsonSaveTest {
+public class XMLSaveTest {
 
     @Test
     public void Main() {
 
         System.out.println("Start");
-
         EntityManager entityManager = null;
-
         EntityManagerFactory entityManagerFactory = null;
 
         try {
 
             // FACTORY NAME HAS TO MATCHED THE ONE FROM PERSISTED.XML !!!
             entityManagerFactory = Persistence.createEntityManagerFactory("hibernate-dynamic");
-
             entityManager = entityManagerFactory.createEntityManager();
 
-            entityManager.getTransaction().begin();
+           // entityManager.getTransaction().begin();
 
             //MANUFACTURER
             Manufacturer brand1 = new Manufacturer();
@@ -111,39 +106,39 @@ public class JsonSaveTest {
 
 
             //SAVE TO JSON FILES
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JodaModule());
+            XmlMapper xmlMapper = new XmlMapper();
+            xmlMapper.registerModule(new JodaModule());
 
             List <Manufacturer> manufacturerList = new ArrayList<Manufacturer>();
             manufacturerList.add(brand1);
             manufacturerList.add(brand2);
-            objectMapper.writeValue(new File("manufacturers.json"), manufacturerList);
+            xmlMapper.writeValue(new File("manufacturers.xml"), manufacturerList);
 
             List <Model> modelList = new ArrayList<Model>();
             modelList.add(model1);
             modelList.add(model2);
-            objectMapper.writeValue(new File("models.json"), modelList);
+            xmlMapper.writeValue(new File("models.xml"), modelList);
 
             List <Car> carList = new ArrayList<Car>();
             carList.add(car1);
             carList.add(car2);
-            objectMapper.writeValue(new File("cars.json"), carList);
+            xmlMapper.writeValue(new File("cars.xml"), carList);
 
             List <Driver> driverList = new ArrayList<Driver>();
             driverList.add(driver1);
             driverList.add(driver2);
-            objectMapper.writeValue(new File("drivers.json"), driverList);
+            xmlMapper.writeValue(new File("drivers.xml"), driverList);
 
             List <License> licenseList = new ArrayList<License>();
             licenseList.add(license1);
             licenseList.add(license2);
-            objectMapper.writeValue(new File("licenses.json"), licenseList);
+            xmlMapper.writeValue(new File("licenses.xml"), licenseList);
 
 
 
 
             //END
-            entityManager.getTransaction().commit();
+           // entityManager.getTransaction().commit();
 
             System.out.println("Done");
 
@@ -160,14 +155,3 @@ public class JsonSaveTest {
 }
 
 
-//EJEMPLO DE QUERIES
-            /*
-            List<Model> models = new Queries(entityManager).getModelByName("328i");
-            Model model2 = new Model();
-            model2.setManufacturer(models.get(0).getManufacturer());
-            model2.setWeight(models.get(0).getWeight());
-            model2.setType(models.get(0).getType());
-            model2.setName("M3-CSL");
-            model2.setHp(360);
-            entityManager.persist(model2);
-             */
