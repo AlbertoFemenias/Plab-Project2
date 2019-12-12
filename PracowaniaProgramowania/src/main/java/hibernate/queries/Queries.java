@@ -15,7 +15,7 @@ public class Queries {
         this.entityManager = entityManager;
     }
 
-   
+
     public List<String> getModelsOfManufacturer(int id) {
         TypedQuery<String> query = entityManager.createQuery(
                 "SELECT name FROM Model where manufacturer_id LIKE :id", String.class);

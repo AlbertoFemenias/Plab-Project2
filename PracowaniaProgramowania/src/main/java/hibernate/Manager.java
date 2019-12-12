@@ -152,13 +152,7 @@ class Manager {
 
     }
 
-    static void changeFirstGuyToNowak(EntityManager entityManager) {
 
-        List<Employee> employees = new Queries(entityManager).getEmployeeByName("Polak");
-
-        employees.get(0).setLastName("NowakPRE" + new Random().nextInt());
-
-    }
 
 
 }
